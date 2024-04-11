@@ -5,6 +5,7 @@ import (
 	"CandyStoreLabyrinth/Logic"
 	"fmt"
 	"math/rand"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -58,4 +59,37 @@ func main() {
 	wg.Wait()
 	close(results)
 	wg_results.Wait()
+
+	// finally, they all take down the queen bee at the heart of the labyrinth
+
+	Queen_BEE := Labyrinth.Witch{
+		"QueenBee",
+		30, 300, rand.Intn(100) + 1, 90,
+	}
+
+	results_final := make(chan string, 101)
+	wg_final := sync.WaitGroup{}
+	wg_final.Add(1)
+	for _, magician := range magicians {
+		fmt.Println(magician + "------------------------------------------------------------")
+	}
+
+	var witchMutex sync.Mutex
+	for _, magician := range magicians {
+		go Logic.Concurrent_battle(magician, &Queen_BEE, results_final, &wg_final, witchMutex)
+	}
+	wg_results_final := sync.WaitGroup{}
+	wg_results_final.Add(1)
+	go func() {
+		defer wg_results_final.Done()
+		iteration := 1
+		for result_final := range results_final {
+			fmt.Println(strconv.Itoa(iteration) + " : " + result_final) // Convert inte to string
+			iteration++
+		}
+	}()
+	wg_final.Wait()
+	close(results_final)
+	wg_results_final.Wait()
+
 }

@@ -3,9 +3,7 @@ package Logic
 import (
 	"CandyStoreLabyrinth/Labyrinth"
 	"fmt"
-	"math/rand"
 	"sync"
-	"time"
 )
 
 func Battle(magician string, witch *Labyrinth.Witch, results chan<- string, wg *sync.WaitGroup) {
@@ -15,6 +13,6 @@ func Battle(magician string, witch *Labyrinth.Witch, results chan<- string, wg *
 		if witch.Health == 0 {
 			wg.Done()
 		}
-		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+		// time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 	}
 }
